@@ -1,5 +1,6 @@
 # clj-nsca
 
+Clojure wrapper for [jsendnsca](https://code.google.com/p/jsendnsca/).
 The project uses [Midje](https://github.com/marick/Midje/).
 
 ## How to run the tests
@@ -25,6 +26,6 @@ Hence:
     cd jsendnsca-read-only
     cd jsendnsca
     mvn install
-    mvn install:install-file -Dfile=target/jsendnsca-2.1-SNAPSHOT.jar -DartifactId=jsendnsca -Dversion=2.1-SNAPSHOT -DgroupId=com.googlecode.jsendnsca -Dpackaging=jar -DlocalRepositoryPath=../clj-nsca/mvn-repo
+    mvn install:install-file -Dfile=target/jsendnsca-2.1-SNAPSHOT.jar -DartifactId=jsendnsca -Dversion=2.1-SNAPSHOT -DgroupId=com.googlecode.jsendnsca -Dpackaging=jar -DlocalRepositoryPath=../../clj-nsca/mvn-repo
     cd ..
     cd clj-nsca
