@@ -1,15 +1,8 @@
-(ns clj_nsca.t-core
+(ns clj-nsca.t-core
   (:use midje.sweet)
-  (:use [clj_nsca.core]))
+  (:use [clj-nsca.core])
+  (:import [com.googlecode.jsendnsca NagiosSettings]))
 
-(facts "about `first-element`"
-  (fact "it normally returns the first element"
-    (first-element [1 2 3] :default) => 1
-    (first-element '(1 2 3) :default) => 1)
-
-  ;; I'm a little unsure how Clojure types map onto the Lisp I'm used to.
-  (fact "default value is returned for empty sequences"
-    (first-element [] :default) => :default
-    (first-element '() :default) => :default
-    (first-element nil :default) => :default
-    (first-element (filter even? [1 3 5]) :default) => :default))
+(facts "about `nagios-settings`"
+  (fact "it accepts host and port"
+    (nagios-settings "host" 12345) => (doto (NagiosSettings.) (.setNagiosHost "host")  (.setPort 12345))))
