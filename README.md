@@ -29,3 +29,33 @@ Hence:
     mvn install:install-file -Dfile=target/jsendnsca-2.1-SNAPSHOT.jar -DartifactId=jsendnsca -Dversion=2.1-SNAPSHOT -DgroupId=com.googlecode.jsendnsca -Dpackaging=jar -DlocalRepositoryPath=../../clj-nsca/mvn-repo
     cd ..
     cd clj-nsca
+
+## Integration testing
+
+Install vagrant, yada yada.
+
+Then:
+
+    vagrant up
+
+In some window:
+    
+    vagrant ssh -c "sudo tail -f /var/log/syslog"
+
+Elsewhere:
+
+    lein run
+
+Expect to see something like:
+
+```
+Sep 22 20:32:25 debian-6 nsca[1559]: Caught SIGHUP - restarting...
+Sep 22 20:32:25 debian-6 nsca[1559]: Starting up daemon
+Sep 22 20:32:25 debian-6 nsca[1559]: Listening for connections on port 5667
+Sep 22 20:33:28 debian-6 nsca[1576]: Connection from 10.0.2.2 port 46579
+Sep 22 20:33:28 debian-6 nsca[1576]: Handling the connection...
+Sep 22 20:33:29 debian-6 nsca[1576]: SERVICE CHECK -> Host Name: 'horst', Service Description: 'API', Return Code: '1', Output: 'Oh noes!!!'
+Sep 22 20:33:29 debian-6 nsca[1576]: Command file '/var/lib/nagios3/rw/nagios.cmd' does not exist, attempting to use alternate dump file '/var/run/nagios/nsca.dump' for output
+Sep 22 20:33:29 debian-6 nsca[1576]: Could not open alternate dump file '/var/run/nagios/nsca.dump' for appending
+Sep 22 20:33:29 debian-6 nsca[1576]: End of connection...
+```
