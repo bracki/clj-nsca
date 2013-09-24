@@ -30,7 +30,7 @@
      (let [msg (nagios-message :host "horst"
                                :level "ok"
                                :service "service"
-                               :description "description")]
+                               :message "description")]
        msg => (doto (MessagePayload.)
                 (.setHostname "horst")
                 (.setLevel "ok")

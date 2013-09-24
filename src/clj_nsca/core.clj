@@ -19,7 +19,7 @@
 
 (defn nagios-message
   "Create a Nagios message."
-  [& {:keys [host level service description]}]
+  [& {:keys [host level service message]}]
   (-> (MessagePayloadBuilder.)
       (.withHostname host)
       ;; There's a typo in the java lib.
@@ -27,23 +27,26 @@
       ;; `tolevel` instead of `toLevel`.
       (.withLevel (Level/tolevel level))
       (.withServiceName service)
-      (.withMessage description)
+      (.withMessage message)
       (.create)))
+
+(defn nagios-sender
+  "Create a Nagios sender."
+  [settings]
+  (new NagiosPassiveCheckSender settings))
 
 (defn send-message
   "Send a message."
-  [settings message]
-  (-> (NagiosPassiveCheckSender. settings)
-      (.send message)))
+  [sender message]
+  (.send sender message))
 
 (defn -main
   [& args]
-  (send-message
-    (nagios-settings :host "localhost"
-                     :port 5667
-                     :password "top-secret"
-                     :encryption Encryption/TRIPLE_DES)
-    (nagios-message :host "horst"
-                    :level "warning"
-                    :service "API"
-                    :description "Oh noes!!!")))
+  (let [sender (nagios-sender (nagios-settings :host "localhost"
+                                               :port 5667
+                                               :password "top-secret"
+                                               :encryption Encryption/TRIPLE_DES))]
+    (send-message sender (nagios-message :host "horst"
+                                         :level "warning"
+                                         :service "API"
+                                         :message "Oh noes!!!"))))
