@@ -18,7 +18,7 @@
     (nagios-settings :host "host"
                      :port 12345
                      :password "top-secret"
-                     :encryption Encryption/TRIPLE_DES) =>
+                     :encryption :TRIPLE_DES) =>
         (doto (NagiosSettings.)
           (.setNagiosHost "host")
           (.setPort 12345)

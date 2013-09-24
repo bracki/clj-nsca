@@ -9,12 +9,12 @@
       :or {host "localhost"
            port 5667
            password ""
-           encryption Encryption/NONE}}]
+           encryption :NONE}}]
   (-> (NagiosSettingsBuilder.)
       (.withNagiosHost host)
       (.withPort port)
       (.withPassword password)
-      (.withEncryption encryption)
+      (.withEncryption (Encryption/valueOf (name encryption)))
       (.create)))
 
 (defn nagios-message
@@ -45,7 +45,7 @@
   (let [sender (nagios-sender (nagios-settings :host "localhost"
                                                :port 5667
                                                :password "top-secret"
-                                               :encryption Encryption/TRIPLE_DES))]
+                                               :encryption :TRIPLE_DES))]
     (send-message sender (nagios-message :host "horst"
                                          :level "warning"
                                          :service "API"
