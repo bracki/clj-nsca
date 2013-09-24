@@ -5,21 +5,21 @@
 
 (defn nagios-settings
   "Create Nagios settings."
-  [& {:keys [host port password encryption]
-      :or {host "localhost"
-           port 5667
-           password ""
-           encryption :NONE}}]
+  [opts]
+  (let [opts (merge {:host "localhost"
+                     :port 5667
+                     :password ""
+                     :encryption :NONE} opts)]
   (-> (NagiosSettingsBuilder.)
-      (.withNagiosHost host)
-      (.withPort port)
-      (.withPassword password)
-      (.withEncryption (Encryption/valueOf (name encryption)))
-      (.create)))
+      (.withNagiosHost (:host opts))
+      (.withPort (:port opts))
+      (.withPassword (:password opts))
+      (.withEncryption (Encryption/valueOf (name (:encryption opts))))
+      (.create))))
 
 (defn nagios-message
   "Create a Nagios message."
-  [& {:keys [host level service message]}]
+  [host level service message]
   (-> (MessagePayloadBuilder.)
       (.withHostname host)
       ;; There's a typo in the java lib.
@@ -42,11 +42,8 @@
 
 (defn -main
   [& args]
-  (let [sender (nagios-sender (nagios-settings :host "localhost"
-                                               :port 5667
-                                               :password "top-secret"
-                                               :encryption :TRIPLE_DES))]
-    (send-message sender (nagios-message :host "horst"
-                                         :level "warning"
-                                         :service "API"
-                                         :message "Oh noes!!!"))))
+  (let [sender (nagios-sender (nagios-settings {:host "localhost"
+                                                :port 5667
+                                                :password "top-secret"
+                                                :encryption :TRIPLE_DES}))]
+    (send-message sender (nagios-message "horst" "warning" "API" "Oh noes!!!"))))
