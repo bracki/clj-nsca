@@ -13,20 +13,6 @@ The project uses [Midje](https://github.com/marick/Midje/).
 watcher on the code files. If they change, only the relevant tests will be
 run again.
 
-## Dependencies
-
-Unfortunately `jsendnsca` is not available via Maven.
-I've uploaded it to Clojars by myself.
-
-Hence:
- 
-    cd ..
-    svn checkout http://jsendnsca.googlecode.com/svn/trunk/ jsendnsca-read-only
-    cd jsendnsca-read-only
-    cd jsendnsca
-    mvn install
-    scp pom.xml target/jsendnsca-$VERSION.jar clojars@clojars.org:
-
 ## Integration testing
 
 Install vagrant, yada yada.

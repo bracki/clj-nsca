@@ -1,20 +1,24 @@
 (ns clj-nsca.core
-  (:import [com.googlecode.jsendnsca.builders NagiosSettingsBuilder MessagePayloadBuilder]
-           [com.googlecode.jsendnsca Level NagiosPassiveCheckSender]
-           [com.googlecode.jsendnsca.encryption Encryption]))
+  (:import [com.googlecode.jsendnsca.core.builders NagiosSettingsBuilder MessagePayloadBuilder]
+           [com.googlecode.jsendnsca.core.utils LevelUtils]
+           [com.googlecode.jsendnsca.core NagiosPassiveCheckSender NagiosSettings Encryption]))
+
+(def NO_ENCRYPTION NagiosSettings/NO_ENCRYPTION)
+(def XOR_ENCRYPTION NagiosSettings/XOR_ENCRYPTION)
+(def TRIPLE_DES_ENCRYPTION NagiosSettings/TRIPLE_DES_ENCRYPTION)
 
 (defn nagios-settings
   "Create Nagios settings."
   [opts]
   (let [opts (merge {:host "localhost"
                      :port 5667
-                     :password ""
-                     :encryption :NONE} opts)]
+                     :password "password"
+                     :encryption NO_ENCRYPTION} opts)]
   (-> (NagiosSettingsBuilder.)
       (.withNagiosHost (:host opts))
       (.withPort (:port opts))
       (.withPassword (:password opts))
-      (.withEncryption (Encryption/valueOf (name (:encryption opts))))
+      (.withEncryption (:encryption opts))
       (.create))))
 
 (defn nagios-message
@@ -22,10 +26,7 @@
   [host level service message]
   (-> (MessagePayloadBuilder.)
       (.withHostname host)
-      ;; There's a typo in the java lib.
-      ;; That's why the method is called
-      ;; `tolevel` instead of `toLevel`.
-      (.withLevel (Level/tolevel level))
+      (.withLevel (LevelUtils/getLevel (name level)))
       (.withServiceName service)
       (.withMessage message)
       (.create)))
@@ -45,5 +46,5 @@
   (let [sender (nagios-sender (nagios-settings {:host "localhost"
                                                 :port 5667
                                                 :password "top-secret"
-                                                :encryption :TRIPLE_DES}))]
+                                                :encryption TRIPLE_DES_ENCRYPTION}))]
     (send-message sender (nagios-message "horst" "warning" "API" "Oh noes!!!"))))
